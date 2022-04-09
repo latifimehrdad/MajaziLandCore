@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="needPermissions">نیازاپلیکیشن به دسترسی</string>
+    <string name="needPermissionsDescription">برخی از مجوزها برای انجام این کار مورد نیاز است.</string>
+
+
+</resources>

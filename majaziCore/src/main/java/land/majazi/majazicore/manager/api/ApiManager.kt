@@ -1,4 +1,4 @@
-package land.majazi.majazicore.manager
+package land.majazi.majazicore.manager.api
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
@@ -55,7 +55,10 @@ private fun exceptionHandle(e: Exception, emitter: RemoteErrorEmitter) {
 //__________________________________________________________________________________________________ httpException
 private fun httpException(e: HttpException, emitter: RemoteErrorEmitter) {
     when (e.code()) {
-        401 -> emitter.unAuthorization(AuthorizationType.UnAuthorization, responseMessage(e.response()))
+        401 -> emitter.unAuthorization(
+            AuthorizationType.UnAuthorization,
+            responseMessage(e.response())
+        )
         403 -> emitter.unAuthorization(AuthorizationType.UnAccess, responseMessage(e.response()))
         400 -> emitter.onError(ErrorType.UNKNOWN, responseMessage(e.response()))
         else -> emitter.onError(ErrorType.UNKNOWN, responseMessage(e.response()))
@@ -67,18 +70,19 @@ private fun httpException(e: HttpException, emitter: RemoteErrorEmitter) {
 //__________________________________________________________________________________________________ responseMessage
 private fun responseMessage(response: Response<*>?): String? {
     val error = response?.errorBody()?.string()?.let {
-        if (it.isNullOrEmpty())
+        if (it.isEmpty())
             null
         else
-            JSONObject(it) } ?: return null
+            JSONObject(it)
+    } ?: return null
 
     return if (!error.has("errors")) {
         val message = JSONObject(error.getString("message"))
         message.getString("Exception")
     } else {
-        val message = error?.getString("message")
-        val errors = error?.getString("errors")
-            ?.let { Gson().fromJson(it, mutableListOf<String>().javaClass) }
+        val message = error.getString("message")
+        val errors = error.getString("errors")
+            .let { Gson().fromJson(it, mutableListOf<String>().javaClass) }
         val sb = StringBuilder()
         sb.append(message)
         errors?.forEach { it ->

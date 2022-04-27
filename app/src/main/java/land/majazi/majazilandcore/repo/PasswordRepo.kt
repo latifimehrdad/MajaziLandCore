@@ -1,7 +1,7 @@
 package land.majazi.majazilandcore.repo
 
-import land.majazi.majazicore.manager.RemoteErrorEmitter
-import land.majazi.majazicore.manager.apiCall
+import land.majazi.majazicore.manager.api.RemoteErrorEmitter
+import land.majazi.majazicore.manager.api.apiCall
 import land.majazi.majazilandcore.ApiInterface
 import javax.inject.Inject
 

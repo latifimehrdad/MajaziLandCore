@@ -28,5 +28,5 @@ interface ApiInterface {
 
 
     @GET("$version/Currencies/GetMainCurrencies")
-    suspend fun getMainCurrency(@Header("Authorization")Authorization: String): BaseResponseModel
+    suspend fun getMainCurrency(@Header("Authorization")Authorization: String): CurrencyList
 }

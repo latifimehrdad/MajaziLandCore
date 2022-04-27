@@ -6,21 +6,21 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import land.majazi.majazilandcore.ApiInterface
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class ApiModel {
 
     @Provides
     @Singleton
-    fun provideApiService(): ApiInterface {
-        return Retrofit.Builder()
-            .baseUrl("https://belfi.aspkar.ir")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ApiInterface::class.java)
+    fun provideBaseUrl(): String {
+        return "https://belfi.aspkar.ir"
     }
 
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiInterface {
+        return retrofit.create(ApiInterface::class.java)
+    }
 }

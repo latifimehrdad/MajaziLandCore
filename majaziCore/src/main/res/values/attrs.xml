@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="textTitle" format="color"/>
+    <attr name="textContent" format="color"/>
+
+
+    <attr name="buttonDrawableTint" format="color"/>
+
+
+</resources>

@@ -3,6 +3,8 @@
 
     <string name="needPermissions">نیازاپلیکیشن به دسترسی</string>
     <string name="needPermissionsDescription">برخی از مجوزها برای انجام این کار مورد نیاز است.</string>
-
+    <string name="cancel">بیخیال</string>
+    <string name="gallery">گالری</string>
+    <string name="camera">دوربین</string>
 
 </resources>

@@ -1,17 +1,20 @@
 package land.majazi.majazilandcore
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import land.majazi.majazicore.manager.api.AuthorizationType
 import land.majazi.majazicore.manager.api.ErrorType
 import land.majazi.majazicore.manager.api.RemoteErrorEmitter
+import land.majazi.majazicore.tools.PhotoSelectionDialog
 import land.majazi.majazilandcore.viewModel.CurrencyViewModel
 import land.majazi.majazilandcore.viewModel.DashboardViewModel
 import land.majazi.majazilandcore.viewModel.PasswordViewModel
-import java.io.File
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
@@ -25,6 +28,9 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        PhotoSelectionDialog(this).observe(this) { Log.i(tag, it.toString()) }
+
+
 /*        password.register().observe(this) {
             it?.message?.let { it1 -> Log.i(tag, it1)}
         }*/
@@ -37,13 +43,14 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
             it?.message?.let { it1 -> Log.i(tag, it1) }
         }*/
 
-        val file = File(this.cacheDir, "meri")
+/*        val file = File(this.cacheDir, "meri")
         if (file.exists())
             Log.i(tag, "exists")
         else {
             Log.i(tag, "Not exists")
             Log.i(tag, file.mkdir().toString())
-        }
+        }*/
+
 
     }
 
@@ -55,5 +62,7 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
     override fun onError(errorType: ErrorType, message: String?) {
         Log.i(tag, "errorType : $errorType - msg : $message")
     }
+
+
 
 }

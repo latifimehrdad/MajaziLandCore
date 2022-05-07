@@ -3,8 +3,13 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Android/Projects/MajaziLandCore/app/src/main/res/layout/activity_main.xml" value="0.33177083333333335" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Android/Projects/MajaziLandCore/app/src/main/res/layout/fragment_currency.xml" value="0.33177083333333335" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/majaziCore/src/main/res/drawable/ic_camera.xml" value="0.2275" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/majaziCore/src/main/res/drawable/ic_cancel_close.xml" value="0.2275" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/majaziCore/src/main/res/drawable/ic_gallery.xml" value="0.2275" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/majaziCore/src/main/res/drawable/ic_image_gallery.xml" value="0.2275" />
+        <entry key="..\:/Android/Projects/MajaziLandCore/majaziCore/src/main/res/layout/dialog_pick_image.xml" value="0.33" />
       </map>
     </option>
   </component>

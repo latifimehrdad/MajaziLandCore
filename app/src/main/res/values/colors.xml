@@ -7,4 +7,28 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    //______________________________________________________________________________________________ Light Theme
+
+    <color name="textTitleLight">#000</color>
+    <color name="textContentLight">#3C3C3C</color>
+    <color name="colorPrimaryLight">#001233</color>
+    <color name="colorPrimaryVariantLight">#FFFFFF</color>
+
+    //______________________________________________________________________________________________ Light Theme
+
+
+    //______________________________________________________________________________________________ Dark Theme
+
+    <color name="textTitleDark">#FFFFFF</color>
+    <color name="textContentDark">#AAAAAA</color>
+    <color name="colorPrimaryDark">#F1BD10</color>
+    <color name="colorPrimaryVariantDark">#595959</color>
+
+    //______________________________________________________________________________________________ Dark Theme
+
+
+
+
 </resources>

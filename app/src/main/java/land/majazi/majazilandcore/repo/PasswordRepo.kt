@@ -7,5 +7,5 @@ import javax.inject.Inject
 
 class PasswordRepo @Inject constructor(private val apiInterface: ApiInterface) {
     @Inject lateinit var emitter: RemoteErrorEmitter
-    fun register() = apiCall(emitter){ apiInterface.register("","","")}
+    fun register() = apiCall(emitter){ apiInterface.register("09961048188")}
 }

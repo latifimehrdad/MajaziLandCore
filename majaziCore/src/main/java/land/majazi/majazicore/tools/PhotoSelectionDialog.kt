@@ -1,8 +1,8 @@
 package land.majazi.majazicore.tools
 
 import android.Manifest
+import android.app.Dialog
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
@@ -18,27 +18,43 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.dialog_pick_image.*
 import land.majazi.majazicore.R
 import land.majazi.majazicore.manager.DialogManager
-import java.io.File
 
+/**
+* need permission android.permission.WRITE_EXTERNAL_STORAGE in AndroidManifest
+* */
 
 class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiveData<Uri>() {
 
-    lateinit var fileUri: Uri
+    private lateinit var fileUri: Uri
+    private lateinit var dialog: Dialog
 
     //______________________________________________________________________________________________ init
     init {
-        val dialog = DialogManager(activity, R.layout.dialog_pick_image).createDialog()
-        dialog.materialButtonCancel.setOnClickListener { cancelClick() }
-        dialog.materialButtonGallery.setOnClickListener { galleryClick() }
-        dialog.materialButtonCamera.setOnClickListener { cameraClick() }
-        dialog.show()
+        Dexter.withContext(activity)
+            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withListener(object : MultiplePermissionsListener {
+                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
+                    dialog = DialogManager(activity, R.layout.dialog_pick_image).createDialog()
+                    dialog.materialButtonCancel.setOnClickListener { cancelClick() }
+                    dialog.materialButtonGallery.setOnClickListener { galleryClick() }
+                    dialog.materialButtonCamera.setOnClickListener { cameraClick() }
+                    dialog.show()
+                }
+
+                override fun onPermissionRationaleShouldBeShown(
+                    p0: MutableList<PermissionRequest>?,
+                    p1: PermissionToken?
+                ) {
+
+                }
+            }).check()
     }
     //______________________________________________________________________________________________ init
 
 
     //______________________________________________________________________________________________ cancelClick
     private fun cancelClick() {
-
+        dialog.dismiss()
     }
     //______________________________________________________________________________________________ cancelClick
 
@@ -53,31 +69,19 @@ class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiv
 
     //______________________________________________________________________________________________ cameraClick
     private fun cameraClick() {
-        Dexter.withContext(activity)
-            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            .withListener(object : MultiplePermissionsListener{
-                override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                    val values = ContentValues(1)
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
-                    fileUri = activity.contentResolver
-                        .insert(
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            values
-                        )!!
-                    val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    camera.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-                    camera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                    registerCamera.launch(camera)
-                }
 
-                override fun onPermissionRationaleShouldBeShown(
-                    p0: MutableList<PermissionRequest>?,
-                    p1: PermissionToken?
-                ) {
-                }
-            }).check()
-
+        val values = ContentValues(1)
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
+        fileUri = activity.contentResolver
+            .insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                values
+            )!!
+        val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        camera.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
+        camera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        registerCamera.launch(camera)
     }
     //______________________________________________________________________________________________ cameraClick
 
@@ -88,6 +92,7 @@ class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiv
     ) { result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
             if (result.data != null) {
+                dialog.dismiss()
                 postValue(result.data?.data)
             }
         }
@@ -100,6 +105,7 @@ class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiv
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
+            dialog.dismiss()
             postValue(fileUri)
         }
     }

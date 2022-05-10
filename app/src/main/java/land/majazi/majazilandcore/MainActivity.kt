@@ -38,8 +38,11 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
 /*        val uri = Uri.parse("content://media/external/images/media/1192")
         crop(uri)*/
         PhotoSelectionDialog(this).observe(this) {
-            PhotoCropper(this, it).crop().observe(this) {
-
+            val file = FileManager().getFileFromUri(this, it)
+            if (file.exists()) {
+                national.uploadNationalCode(file).observe(this) { itt ->
+                    itt?.message?.let { it1 -> Log.i(tag, it1) }
+                }
             }
         }
 

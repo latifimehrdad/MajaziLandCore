@@ -29,7 +29,7 @@ private suspend fun <T> privateApiCall(
     responseFunction: suspend () -> T
 ): T? {
     return try {
-        withTimeout(60000) {
+        withTimeout(120000) {
             responseFunction()
         }
     } catch (e: Exception) {
@@ -44,9 +44,9 @@ private suspend fun <T> privateApiCall(
 private fun exceptionHandle(e: Exception, emitter: RemoteErrorEmitter) {
     when (e) {
         is HttpException -> httpException(e, emitter)
-        is TimeoutCancellationException -> emitter.onError(ErrorType.TimeOut, "")
-        is IOException -> emitter.onError(ErrorType.Network, "")
-        else -> emitter.onError(ErrorType.UNKNOWN, "")
+        is TimeoutCancellationException -> emitter.onError(ErrorType.TimeOut, e.message)
+        is IOException -> emitter.onError(ErrorType.Network, e.message)
+        else -> emitter.onError(ErrorType.UNKNOWN, e.message)
     }
 }
 //__________________________________________________________________________________________________ exceptionHandle

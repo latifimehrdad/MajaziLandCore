@@ -15,29 +15,33 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import kotlinx.android.synthetic.main.dialog_pick_image.*
 import land.majazi.majazicore.R
 import land.majazi.majazicore.manager.DialogManager
 
 /**
-* need permission android.permission.WRITE_EXTERNAL_STORAGE in AndroidManifest
-* */
+ * need permissions
+ *  - android.permission.WRITE_EXTERNAL_STORAGE in AndroidManifest
+ *  - android.permission.CAMERA
+ *  - android.permission.RECORD_AUDIO
+ *  - android.permission.READ_EXTERNAL_STORAGE
+ * */
 
-class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiveData<Uri>() {
+class VideoRecorder(private val activity: AppCompatActivity) : MutableLiveData<Uri>() {
 
-    private lateinit var fileUri: Uri
     private lateinit var dialog: Dialog
 
     //______________________________________________________________________________________________ init
     init {
         Dexter.withContext(activity)
-            .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .withPermissions(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.CAMERA
+            )
             .withListener(object : MultiplePermissionsListener {
                 override fun onPermissionsChecked(p0: MultiplePermissionsReport?) {
-                    dialog = DialogManager(activity, R.layout.dialog_pick_image).createDialog()
-                    dialog.materialButtonCancel.setOnClickListener { cancelClick() }
-                    dialog.materialButtonGallery.setOnClickListener { galleryClick() }
-                    dialog.materialButtonCamera.setOnClickListener { cameraClick() }
+                    dialog = DialogManager(activity, R.layout.fragment_capture_video).createDialog()
                     dialog.show()
                 }
 
@@ -61,43 +65,28 @@ class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiv
 
     //______________________________________________________________________________________________ galleryClick
     private fun galleryClick() {
-        val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
-        registerPhoto.launch(gallery)
+
     }
     //______________________________________________________________________________________________ galleryClick
 
 
     //______________________________________________________________________________________________ cameraClick
     private fun cameraClick() {
-
         val values = ContentValues(1)
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpg")
-        fileUri = activity.contentResolver
+        values.put(MediaStore.Images.Media.MIME_TYPE, "video/mp4")
+        val fileUri = activity.contentResolver
             .insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 values
             )!!
-        val camera = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        val camera = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+        camera.putExtra(Intent.EXTRA_TITLE, "Choose an action");
         camera.putExtra(MediaStore.EXTRA_OUTPUT, fileUri)
-        camera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        camera.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         registerCamera.launch(camera)
     }
     //______________________________________________________________________________________________ cameraClick
 
-
-    //______________________________________________________________________________________________ registerPhoto
-    private val registerPhoto = activity.registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result: ActivityResult ->
-        if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            if (result.data != null) {
-                dialog.dismiss()
-                postValue(result.data?.data)
-            }
-        }
-    }
-    //______________________________________________________________________________________________ registerPhoto
 
 
     //______________________________________________________________________________________________ registerPhoto
@@ -105,8 +94,7 @@ class PhotoSelectionDialog(private val activity: AppCompatActivity) : MutableLiv
         ActivityResultContracts.StartActivityForResult()
     ) { result: ActivityResult ->
         if (result.resultCode == AppCompatActivity.RESULT_OK) {
-            dialog.dismiss()
-            postValue(fileUri)
+            postValue(result.data?.data)
         }
     }
     //______________________________________________________________________________________________ registerPhoto

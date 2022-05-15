@@ -29,7 +29,7 @@ private suspend fun <T> privateApiCall(
     responseFunction: suspend () -> T
 ): T? {
     return try {
-        withTimeout(120000) {
+        withTimeout(60000) {
             responseFunction()
         }
     } catch (e: Exception) {

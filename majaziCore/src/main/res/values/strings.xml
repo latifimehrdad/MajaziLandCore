@@ -6,5 +6,6 @@
     <string name="cancel">بیخیال</string>
     <string name="gallery">گالری</string>
     <string name="camera">دوربین</string>
+    <string name="titleVideoRecording">متن زیر را در هنگام فیلم برداری بخوانید</string>
 
 </resources>

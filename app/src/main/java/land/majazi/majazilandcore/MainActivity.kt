@@ -1,25 +1,17 @@
 package land.majazi.majazilandcore
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
-import land.majazi.majazicore.manager.FileManager
 import land.majazi.majazicore.manager.api.AuthorizationType
 import land.majazi.majazicore.manager.api.ErrorType
 import land.majazi.majazicore.manager.api.RemoteErrorEmitter
-import land.majazi.majazicore.tools.PhotoCropper
-import land.majazi.majazicore.tools.PhotoSelectionDialog
 import land.majazi.majazilandcore.viewModel.CurrencyViewModel
 import land.majazi.majazilandcore.viewModel.DashboardViewModel
 import land.majazi.majazilandcore.viewModel.NationalCodeViewModel
 import land.majazi.majazilandcore.viewModel.PasswordViewModel
-import java.io.File
 
 
 @AndroidEntryPoint
@@ -35,16 +27,17 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-/*        val uri = Uri.parse("content://media/external/images/media/1192")
-        crop(uri)*/
-        PhotoSelectionDialog(this).observe(this) {
-            val file = FileManager().getFileFromUri(this, it)
-            if (file.exists()) {
-                national.uploadNationalCode(file).observe(this) { itt ->
-                    itt?.message?.let { it1 -> Log.i(tag, it1) }
-                }
-            }
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.frameLayout, NationalFragment()).commit()
+
+/*        btnImage.setOnClickListener {
+            supportFragmentManager.beginTransaction().replace(R.id.frameLayout, CaptureVideoFragment()).commit()
+        }*/
+
+/*        val uri = Uri.parse("content://media/external/images/media/1192")*/
+
+/*        PhotoSelectionDialog(this@MainActivity).observe(this@MainActivity) {
+            it?.let { it1 -> Log.i(tag, it1.toString())}
+        }*/
 
 
 /*        password.register().observe(this) {
@@ -71,10 +64,6 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
     }
 
 
-    private fun crop(uri: Uri) {
-
-    }
-
     override fun unAuthorization(type: AuthorizationType, message: String?) {
         Log.i(tag, "unAuthorization : $type - msg : $message")
     }
@@ -83,7 +72,6 @@ class MainActivity : AppCompatActivity(), RemoteErrorEmitter {
     override fun onError(errorType: ErrorType, message: String?) {
         Log.i(tag, "errorType : $errorType - msg : $message")
     }
-
 
 
 }

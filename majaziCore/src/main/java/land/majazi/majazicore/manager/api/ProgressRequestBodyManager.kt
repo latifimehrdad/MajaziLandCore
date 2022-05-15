@@ -16,6 +16,8 @@ class ProgressRequestBodyManager(
 ) : RequestBody() {
 
 
+    val bufferSize = 2048
+
     //______________________________________________________________________________________________ contentType
     override fun contentType(): MediaType? {
         return "$contentType/*".toMediaTypeOrNull()
@@ -32,7 +34,7 @@ class ProgressRequestBodyManager(
 
     //______________________________________________________________________________________________ writeTo
     override fun writeTo(sink: BufferedSink) {
-        val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+        val buffer = ByteArray(bufferSize)
         val fin = FileInputStream(file)
         var upload: Long = 0
         var read: Int

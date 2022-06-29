@@ -7,9 +7,9 @@ import java.util.*
 class DeviceManager {
 
     //__________________________________________________________________________________________ appVersionCode
-    fun appVersionCode(context: Context): Int {
+    fun appVersionCode(context: Context): Long {
         return try {
-            context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+            context.packageManager.getPackageInfo(context.packageName, 0).longVersionCode
         } catch (E: Exception) {
             0
         }

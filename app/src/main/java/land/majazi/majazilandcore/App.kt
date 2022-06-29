@@ -1,4 +1,4 @@
-package land.majazi.majazicore.views
+package land.majazi.majazilandcore
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

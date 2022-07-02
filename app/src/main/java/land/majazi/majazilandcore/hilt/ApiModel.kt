@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import land.majazi.majazicore.manager.MessageManager
 import land.majazi.majazilandcore.ApiInterface
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -23,4 +24,5 @@ class ApiModel {
     fun provideApiService(retrofit: Retrofit): ApiInterface {
         return retrofit.create(ApiInterface::class.java)
     }
+
 }

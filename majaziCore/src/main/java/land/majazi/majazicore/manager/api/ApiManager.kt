@@ -74,7 +74,7 @@ private fun responseMessage(response: Response<*>?): String? {
             null
         else
             JSONObject(it)
-    } ?: return null
+    } ?: return response?.raw()?.toString()
 
     return if (!error.has("errors")) {
         val message = JSONObject(error.getString("message"))

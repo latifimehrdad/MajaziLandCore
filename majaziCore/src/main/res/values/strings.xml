@@ -7,5 +7,6 @@
     <string name="gallery">گالری</string>
     <string name="camera">دوربین</string>
     <string name="titleVideoRecording">متن زیر را در هنگام فیلم برداری بخوانید</string>
+    <string name="unfortunatelyAnErrorOccurred">متاسفانه خطایی رخ داده، چند دقیقه بعد دوباره تلاش کنید</string>
 
 </resources>

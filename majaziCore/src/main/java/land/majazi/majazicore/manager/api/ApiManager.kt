@@ -44,12 +44,22 @@ private suspend fun <T> privateApiCall(
 private fun exceptionHandle(e: Exception, emitter: RemoteErrorEmitter) {
     when (e) {
         is HttpException -> httpException(e, emitter)
-        is TimeoutCancellationException -> emitter.onError(ErrorType.TimeOut, e.message)
-        is IOException -> emitter.onError(ErrorType.Network, e.message)
-        else -> emitter.onError(ErrorType.UNKNOWN, e.message)
+        is TimeoutCancellationException -> emitter.onError(ErrorType.TimeOut, exceptionMessage(e))
+        is IOException -> emitter.onError(ErrorType.Network, exceptionMessage(e))
+        else -> emitter.onError(ErrorType.UNKNOWN, exceptionMessage(e))
     }
 }
 //__________________________________________________________________________________________________ exceptionHandle
+
+
+//-------------------------------------------------------------------------------------------------- exceptionMessage
+private fun exceptionMessage(exception: Exception): String {
+    return exception.message?.let {
+        exception.message
+    } ?: "متاسفانه خطایی رخ داده، چند دقیقه بعد دوباره تلاش کنید"
+}
+//-------------------------------------------------------------------------------------------------- exceptionMessage
+
 
 
 //__________________________________________________________________________________________________ httpException
@@ -60,7 +70,6 @@ private fun httpException(e: HttpException, emitter: RemoteErrorEmitter) {
             responseMessage(e.response())
         )
         403 -> emitter.unAuthorization(AuthorizationType.UnAccess, responseMessage(e.response()))
-        400 -> emitter.onError(ErrorType.UNKNOWN, responseMessage(e.response()))
         else -> emitter.onError(ErrorType.UNKNOWN, responseMessage(e.response()))
     }
 }
@@ -68,13 +77,13 @@ private fun httpException(e: HttpException, emitter: RemoteErrorEmitter) {
 
 
 //__________________________________________________________________________________________________ responseMessage
-private fun responseMessage(response: Response<*>?): String? {
+private fun responseMessage(response: Response<*>?): String {
     val error = response?.errorBody()?.string()?.let {
         if (it.isEmpty())
             null
         else
             JSONObject(it)
-    } ?: return response?.raw()?.toString()
+    } ?: return "متاسفانه خطایی رخ داده، چند دقیقه بعد دوباره تلاش کنید"
 
     return if (!error.has("errors")) {
         val message = JSONObject(error.getString("message"))
@@ -98,8 +107,8 @@ private fun responseMessage(response: Response<*>?): String? {
 
 
 interface RemoteErrorEmitter {
-    fun unAuthorization(type: AuthorizationType, message: String?)
-    fun onError(errorType: ErrorType, message: String?)
+    fun unAuthorization(type: AuthorizationType, message: String)
+    fun onError(errorType: ErrorType, message: String)
 }
 
 
